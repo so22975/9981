@@ -51,8 +51,8 @@
 
     button {
       width: 100%;
-      padding: 14px;
-      font-size: 18px;
+      padding: 10px;
+      font-size: 16px;
       border: none;
       border-radius: 12px;
       margin-top: 12px;
@@ -67,13 +67,13 @@
 
     .card {
       text-align: center;
-      font-size: 52px;
+      font-size: 42px;
       font-weight: bold;
-      padding: 40px 10px;
+      padding: 20px 10px;
       border-radius: 20px;
       background: #fff7d6;
       margin: 16px 0;
-      min-height: 90px;
+      min-height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -164,20 +164,20 @@
     <div class="card" id="question">?</div>
     <div class="answer" id="answer"></div>
 
-<div style="margin-top:20px;">
+<div style="margin-top:8px;">
   <input
     type="number"
     id="userAnswer"
-    placeholder="こたえをいれてね"
     readonly
     style="
       width:100%;
-      font-size:32px;
+      font-size:28px;
       text-align:center;
-      padding:16px;
-      border-radius:12px;
+      padding:8px;
+      border-radius:10px;
       border:2px solid #ccc;
       box-sizing:border-box;
+      margin:0;
     "
   />
 </div>
@@ -185,23 +185,24 @@
 <div id="judgeMessage"
      style="
        text-align:center;
-       font-size:32px;
+       font-size:28px;
        font-weight:bold;
-       min-height:50px;
-       margin-top:10px;
+       min-height:40px;
+       margin-top:6px;
+       line-height:1.3;
      ">
 </div>
 
-<button class="primary" onclick="checkAnswer()">
+<button class="primary" onclick="checkAnswer()" style="margin-top:8px;">
   こたえる
 </button>
 
-<button class="gray" onclick="showAnswer()">
-  答えを見る
-</button>
-
-<div id="keypad" style="margin-top:16px;">
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+<div id="keypad" style="margin-top:8px;">
+  <div style="
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:6px;
+    ">
 
     <button onclick="pressKey('1')">1</button>
     <button onclick="pressKey('2')">2</button>
@@ -222,7 +223,9 @@
   </div>
 </div>
 
-<button class="gray" onclick="resetGame()">やめる</button>
+<button class="gray" onclick="resetGame()" style="margin-top:8px;">
+  やめる
+</button>
   </section>
 
   <section class="panel" id="result" style="display:none;">
@@ -485,6 +488,7 @@ function backspace() {
 }
 
 function checkAnswer() {
+
   const input = document.getElementById("userAnswer");
   const judge = document.getElementById("judgeMessage");
 
@@ -492,7 +496,10 @@ function checkAnswer() {
   const correct = problems[index].answer;
 
   if (user === correct) {
-    judge.textContent = "⭕ せいかい！";
+
+    judge.innerHTML =
+      `⭕ せいかい！<br>こたえ：${correct}`;
+
     judge.style.color = "#188a45";
 
     correctCount++;
@@ -501,7 +508,10 @@ function checkAnswer() {
     saveHistory(problems[index], true);
 
   } else {
-    judge.textContent = "❌ ざんねん";
+
+    judge.innerHTML =
+      `❌ ざんねん<br>こたえ：${correct}`;
+
     judge.style.color = "#d12b2b";
 
     saveWeakProblem(problems[index]);
@@ -509,6 +519,7 @@ function checkAnswer() {
   }
 
   setTimeout(() => {
+
     index++;
 
     if (index >= problems.length) {
@@ -520,7 +531,7 @@ function checkAnswer() {
     input.value = "";
     judge.textContent = "";
 
-  }, 1200);
+  }, 1500);
 }
 
   renderHistory();
