@@ -164,10 +164,65 @@
     <div class="card" id="question">?</div>
     <div class="answer" id="answer"></div>
 
-    <button class="gray" onclick="showAnswer()">答えを見る</button>
-    <button class="success" onclick="markAnswer(true)">正解</button>
-    <button class="danger" onclick="markAnswer(false)">まちがい</button>
-    <button class="gray" onclick="resetGame()">やめる</button>
+<div style="margin-top:20px;">
+  <input
+    type="number"
+    id="userAnswer"
+    placeholder="こたえをいれてね"
+    readonly
+    style="
+      width:100%;
+      font-size:32px;
+      text-align:center;
+      padding:16px;
+      border-radius:12px;
+      border:2px solid #ccc;
+      box-sizing:border-box;
+    "
+  />
+</div>
+
+<div id="judgeMessage"
+     style="
+       text-align:center;
+       font-size:32px;
+       font-weight:bold;
+       min-height:50px;
+       margin-top:10px;
+     ">
+</div>
+
+<button class="primary" onclick="checkAnswer()">
+  こたえる
+</button>
+
+<button class="gray" onclick="showAnswer()">
+  答えを見る
+</button>
+
+<div id="keypad" style="margin-top:16px;">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+
+    <button onclick="pressKey('1')">1</button>
+    <button onclick="pressKey('2')">2</button>
+    <button onclick="pressKey('3')">3</button>
+
+    <button onclick="pressKey('4')">4</button>
+    <button onclick="pressKey('5')">5</button>
+    <button onclick="pressKey('6')">6</button>
+
+    <button onclick="pressKey('7')">7</button>
+    <button onclick="pressKey('8')">8</button>
+    <button onclick="pressKey('9')">9</button>
+
+    <button onclick="clearAnswer()">けす</button>
+    <button onclick="pressKey('0')">0</button>
+    <button onclick="backspace()">←</button>
+
+  </div>
+</div>
+
+<button class="gray" onclick="resetGame()">やめる</button>
   </section>
 
   <section class="panel" id="result" style="display:none;">
@@ -299,6 +354,8 @@
     document.getElementById("current").textContent = index + 1;
     document.getElementById("question").textContent = problems[index].text;
     document.getElementById("answer").textContent = "";
+    document.getElementById("userAnswer").value = "";
+    document.getElementById("judgeMessage").textContent = "";
   }
 
   function showAnswer() {
@@ -412,6 +469,59 @@
     localStorage.removeItem("weakProblems");
     alert("苦手問題を消しました。");
   }
+
+function pressKey(num) {
+  const input = document.getElementById("userAnswer");
+  input.value += num;
+}
+
+function clearAnswer() {
+  document.getElementById("userAnswer").value = "";
+}
+
+function backspace() {
+  const input = document.getElementById("userAnswer");
+  input.value = input.value.slice(0, -1);
+}
+
+function checkAnswer() {
+  const input = document.getElementById("userAnswer");
+  const judge = document.getElementById("judgeMessage");
+
+  const user = Number(input.value);
+  const correct = problems[index].answer;
+
+  if (user === correct) {
+    judge.textContent = "⭕ せいかい！";
+    judge.style.color = "#188a45";
+
+    correctCount++;
+    document.getElementById("correct").textContent = correctCount;
+
+    saveHistory(problems[index], true);
+
+  } else {
+    judge.textContent = "❌ ざんねん";
+    judge.style.color = "#d12b2b";
+
+    saveWeakProblem(problems[index]);
+    saveHistory(problems[index], false);
+  }
+
+  setTimeout(() => {
+    index++;
+
+    if (index >= problems.length) {
+      finishGame();
+    } else {
+      showQuestion();
+    }
+
+    input.value = "";
+    judge.textContent = "";
+
+  }, 1200);
+}
 
   renderHistory();
 </script>
