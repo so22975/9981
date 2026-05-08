@@ -2,14 +2,21 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>小学生用 計算カード</title>
+  <meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>9981</title>
   <style>
     body {
       font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic", sans-serif;
       margin: 0;
       background: #f5f7fb;
       color: #222;
+
+      touch-action: manipulation;
+      overscroll-behavior: contain;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     header {
@@ -533,6 +540,28 @@ function checkAnswer() {
 
   }, 1500);
 }
+
+let lastTouchEnd = 0;
+
+document.addEventListener('touchend', function (event) {
+
+  const now = (new Date()).getTime();
+
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+
+  lastTouchEnd = now;
+
+}, { passive: false });
+
+document.addEventListener('gesturestart', function (event) {
+  event.preventDefault();
+});
+
+document.addEventListener('dblclick', function (event) {
+  event.preventDefault();
+}, { passive: false });
 
   renderHistory();
 </script>
